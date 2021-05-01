@@ -21,6 +21,7 @@ public class LibraryManagementSystem implements SystemBean {
         System.out.println("----------로그인 성공-----------");
 
         while(condition){
+            System.out.println("원하는 항목을 선택해주세요.");
             System.out.println("1.도서검색 2.도서대여 3.도서반납 (종료하려면 아무키나 누르세요.)");
 
             switch (userInputManager.scanner.next()){

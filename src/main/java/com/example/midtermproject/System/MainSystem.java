@@ -31,7 +31,6 @@ public class MainSystem implements SystemBean {
             System.out.println("1.로그인  2.회원 등록 3. 회원 정보 수정 (종료를 위해서는 아무키나 누르셈.)\n");
             switch (userInputManager.scanner.next()){
                 case "1":
-                    System.out.println("로그인");
 //                    System.out.println("1.검색 2.대여 3.반납 4.사용자 정보 입력 5.아무거나입력하면 종료");
                     //검색 대여 반납 기능하는 곳으로 이동
                     if (loginManager.login()){
@@ -41,12 +40,10 @@ public class MainSystem implements SystemBean {
                     }
                     break;
                 case "2":
-                    System.out.println("회원 등록");
                     //회원 등록하는 곳으로 이동
                     accountManager.createAccount();
                     break;
                 case "3":
-                    System.out.println("회원 정보 수정");
                     //회원 등록하는 곳으로 이동
                     accountManager.updateAccount();
                     break;

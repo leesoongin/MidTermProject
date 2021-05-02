@@ -1,5 +1,6 @@
 package com.example.midtermproject.Manager;
 
+import com.example.midtermproject.Model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ import java.util.Scanner;
 public class LoginManager{
     @Autowired
     UserInputManager userInputManager;
+    @Autowired
+    AccountManager accountManager;
 
     public Boolean login(){
         String id, password = "";
@@ -34,6 +37,7 @@ public class LoginManager{
 
                 for(int i=0;i<users.length;i++){
                     if (i%2==0 && users[i].equals(id) && users[i+1].equals(password)){
+                        setAccessedUserId(users[0],users[1],users[2],users[3],users[4]);
                         return true;
                     }
                 }
@@ -41,5 +45,15 @@ public class LoginManager{
             reader.close();
         }catch (IOException e){ e.printStackTrace(); }
         return false;
+    }
+
+    private void setAccessedUserId(String id,String password,String name,String phone,String address){
+        Account account = new Account();
+        account.setId(id);
+        account.setPassword(password);
+        account.setName(name);
+        account.setPhone(phone);
+        account.setAddress(address);
+        accountManager.accessedId = account;
     }
 }

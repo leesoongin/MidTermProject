@@ -28,7 +28,7 @@ public class MainSystem implements SystemBean {
 
         while (condition){
             System.out.println("------도서관 관리시스템--------");
-            System.out.println("1.로그인  2.회원 등록 3. 회원 정보 수정 (종료를 위해서는 아무키나 누르셈.)\n");
+            System.out.println("1.로그인  2.회원 등록 (종료를 위해서는 아무키나 누르셈.)\n");
             switch (userInputManager.scanner.next()){
                 case "1":
 //                    System.out.println("1.검색 2.대여 3.반납 4.사용자 정보 입력 5.아무거나입력하면 종료");
@@ -43,11 +43,7 @@ public class MainSystem implements SystemBean {
                     //회원 등록하는 곳으로 이동
                     accountManager.createAccount();
                     break;
-                case "3":
-                    //회원 등록하는 곳으로 이동
-                    accountManager.updateAccount();
-                    break;
-                    default:
+                default :
                     condition = false;
                     System.out.println("시스템 종료");
                     break;

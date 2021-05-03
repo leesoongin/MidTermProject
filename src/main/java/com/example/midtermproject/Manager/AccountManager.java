@@ -1,6 +1,7 @@
 package com.example.midtermproject.Manager;
 
 import com.example.midtermproject.Model.Account;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -11,43 +12,29 @@ import java.util.Scanner;
 
 @Component
 public class AccountManager{
-    //회원가입(유저정보 저장) , 정보수정(유저정보 수정) <- 로그인 시
-    public static Account accessedId = null; // 나중에 로그인 되면 여기에 사용자 id 넣어놓자
-    Scanner sc = new Scanner(System.in);
+    @Autowired
+    UserInputManager userInputManager;
+    public static Account accessedId = null;
+    private String filePath = "/Users/isung-in/IdeaProjects/MidTermProject/Account/user.txt";
 
-    //수정은 나중에
     public void updateAccount(){
-        String id,password = "";
-        String willChangePassword = "";
-        String changeStr = "";
-        System.out.println("아이디를 입력해주세요");
-        id = sc.next();
-        System.out.println("비밀번호를 입력해주세요");
-        password = sc.next();
-        System.out.println("변경할 비밀번호를 입력해주세요");
-        willChangePassword = sc.next();
+        //TODO: 1. 비밀번호 변경  2. 주소변경
+        System.out.println("\n----------내 정보 수정하기-----------\n");
+        System.out.println("-------변경할 정보를 입력해주세요. (아무키나 누르면 종료)--------");
+        System.out.println("1.비밀번호 변경  2.주소 변경");
 
-        try{
-            String contents = new String(Files.readAllBytes(Paths.get("/Users/isung-in/IdeaProjects/MidTermProject/Account/user.txt")), Charset.defaultCharset()); // contents 는 전체 파일 내용
-            String[] content = contents.split(",");
-
-            for(int i=0;i<content.length;i++){
-                if(i%2==0 && content[i].equals(id) && content[i+1].equals(password)){
-                    content[i+1] = willChangePassword;
-                }
-            }
-            for(int i=0;i<content.length;i++){
-                changeStr += content[i]+",";
-            }
-            System.out.println(changeStr);
-
-            FileWriter writer = new FileWriter("/Users/isung-in/IdeaProjects/MidTermProject/Account/user.txt");
-            writer.write(String.format("%s",changeStr));
-            writer.flush();
-            writer.close();
-        }catch (IOException e){ e.printStackTrace(); }
+        switch(userInputManager.scanner.next()){
+            case "1":
+                updatePassword();
+                break;
+            case "2":
+                updateAddress();
+                break;
+            default:
+                System.out.println("---------내 정보 수정하기 종료.-------");
+                break;
+        }
     }
-
     public void createAccount(){
         String[] accountInfo = {"아이디: ","비밀번호: ","이름: ","전화번호: ","주소: "};
         String[] userInput = new String[5];
@@ -60,7 +47,7 @@ public class AccountManager{
 
         for(int i=0;i<accountInfo.length;i++){
             System.out.println(accountInfo[i]);
-            userInput[i] = sc.next();
+            userInput[i] = userInputManager.scanner.next();
         }
         account.setId(userInput[0]);
         account.setPassword(userInput[1]);
@@ -79,5 +66,91 @@ public class AccountManager{
             writer.close();
             System.out.println("작성 완료.");
         } catch (IOException e) { e.printStackTrace(); }
+    }
+    private void updatePassword(){
+        //비번변경기능
+        userInputManager.scanner.nextLine();
+        System.out.println("-----비밀번호 변경------\n");
+        System.out.println("아이디를 입력하세요.");
+        String id = userInputManager.scanner.nextLine();
+        System.out.println("비밀번호를 입력하세요.");
+        String password = userInputManager.scanner.nextLine();
+        String changePassword = "";
+        String changeStr = "";
+
+        if (isSuccess(id,password)){
+            try {
+                System.out.println("변경할 비밀번호를 입력해주세요");
+                changePassword = userInputManager.scanner.nextLine();
+
+                BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    String[] userInfo = line.split(","); //한 라인의 북 정보를 가져오기
+                    if (userInfo[0].equals(id) && userInfo[1].equals(password)) {
+                        userInfo[1] = changePassword;
+                    }
+                    changeStr += String.format("%s,%s,%s,%s,%s\n",userInfo[0],userInfo[1],userInfo[2],userInfo[3],userInfo[4]);
+                }
+                FileWriter writer = new FileWriter(filePath);
+                writer.write(String.format("%s",changeStr));
+                writer.flush();
+                writer.close();
+                System.out.println("-----비밀번호 변경이 완료되었습니다.-----\n");
+            }catch (IOException e){ e.printStackTrace(); }
+        }else{
+            System.out.println("아이디 또는 패스워드가 일치하지 않습니다. 다시 시도해주세요. \n");
+        }
+    }
+    private void updateAddress(){
+        //비번변경기능
+        userInputManager.scanner.nextLine();
+        System.out.println("-----주소 변경------\n");
+        System.out.println("아이디를 입력하세요.");
+        String id = userInputManager.scanner.nextLine();
+        System.out.println("비밀번호를 입력하세요.");
+        String password = userInputManager.scanner.nextLine();
+        String changeAddress = "";
+        String changeStr = "";
+        if (isSuccess(id,password)){
+            try {
+                System.out.println("변경할 주소를 입력해주세요");
+                changeAddress = userInputManager.scanner.nextLine();
+
+                BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    String[] userInfo = line.split(","); //한 라인의 북 정보를 가져오기
+                    if (userInfo[0].equals(id) && userInfo[1].equals(password)) {
+                        userInfo[4] = changeAddress;
+                    }
+                    changeStr += String.format("%s,%s,%s,%s,%s\n",userInfo[0],userInfo[1],userInfo[2],userInfo[3],userInfo[4]);
+                }
+                System.out.println("--> "+changeStr);
+                FileWriter writer = new FileWriter(filePath);
+                writer.write(String.format("%s",changeStr));
+                writer.flush();
+                writer.close();
+                System.out.println("-----주소 변경이 완료되었습니다.-----\n");
+            }catch (IOException e){ e.printStackTrace(); }
+        }else{
+            System.out.println("아이디 또는 패스워드가 일치하지 않습니다. 다시 시도해주세요. \n");
+        }
+    }
+
+    private Boolean isSuccess(String id,String password){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                String[] userInfo = line.split(","); //한 라인의 북 정보를 가져오기
+                if(userInfo[0].equals(id) && userInfo[1].equals(password)){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

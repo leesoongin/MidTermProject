@@ -6,6 +6,7 @@ import com.example.midtermproject.Manager.LoginManager;
 import com.example.midtermproject.Manager.UserInputManager;
 import com.example.midtermproject.Model.Book;
 import com.example.midtermproject.Model.LentalInfo;
+import com.example.midtermproject.Model.ReservationInfo;
 import com.example.midtermproject.System.MainSystem;
 import com.example.midtermproject.System.LibraryManagementSystem;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,10 @@ public class JavaConfig {
     public ArrayList<LentalInfo> lentalInfos(){
         return new ArrayList<LentalInfo>();
     }
+    @Bean ArrayList<ReservationInfo> reservationInfos() {
+        return new ArrayList<ReservationInfo>();
+    }
+
     @Bean
     public SystemBean systemBean(){
         SystemBean systemBean = new MainSystem();
